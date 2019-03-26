@@ -46,6 +46,23 @@ server.post('/api/zoos', async (req,res) => {
 }
 });
 
+server.put('/api/zoos/:id', async (req,res) => {
+  try {
+    const id = await db('zoos')
+    .where({ id:req.params.id })
+    .update(req.body)
+
+    if(id > 0){
+    const zoos = await db('zoos')
+    .where({ id:req.params.id })
+    .first();
+    res.status(200).json(zoos)
+    }else
+    res.status(404).json({ message: 'Not found' })
+} catch (error) {
+    res.status(500).json(error)
+}
+});
 
 const port = 3300;
 server.listen(port, function() {
