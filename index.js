@@ -1,14 +1,26 @@
 const express = require('express');
 const helmet = require('helmet');
+const knex = require('knex');
+const knexConfig = require('./knexfile');
+const db = knex(knexConfig.development);
 
 const server = express();
 
 server.use(express.json());
 server.use(helmet());
 
-// endpoints here
-server.get('zoos', (req,res) => {
+server.get('/', (req, res) => {
+ res.send('ZECH is a SEXY BEAST');
+});
 
+// endpoints here
+server.get('/api/zoos', async (req,res) => {
+  try {
+    const zoos = await db('zoos')
+    res.status(200).json(zoos)
+} catch (error) {
+    res.status(500).json(error)
+}
 });
 
 
